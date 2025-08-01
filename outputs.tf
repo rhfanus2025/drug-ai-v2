@@ -1,50 +1,48 @@
-# Resource Group Info
+# ./outputs.tf
+
 output "resource_group_name" {
-  value       = var.resource_group_name
-  description = "Name of the resource group."
+  description = "Name of the created resource group."
+  value       = azurerm_resource_group.main.name
 }
 
-# Bastion Info
-output "bastion_dns" {
+# --- Bastion Info ---
+output "bastion_dns_name" {
+  description = "The DNS name of the Azure Bastion host for secure VM access."
   value       = module.bastion.bastion_dns
-  description = "DNS name of the Azure Bastion host."
 }
 
-# VM Info
-output "vm_id" {
+# --- VM Info ---
+output "vm_ctrl_id" {
+  description = "The resource ID of the control VM."
   value       = module.vm_ctrl.vm_id
-  description = "ID of the VM instance."
 }
 
-output "vm_nic_id" {
-  value       = module.vm_ctrl.vm_nic_id
-  description = "NIC ID of the VM."
-}
-
-output "vm_private_ip" {
+output "vm_ctrl_private_ip" {
+  description = "The private IP address of the control VM."
   value       = module.vm_ctrl.private_ip
-  description = "Private IP address of the VM."
 }
 
-# LangGraph ACA Info
-output "langgraph_fqdn" {
-  value       = module.langgraph_aca.app_url
-  description = "FQDN URL of the LangGraph container app."
-}
-
-# Autogen ACA Info
-output "autogen_fqdn" {
-  value       = module.autogen_aca.app_url
-  description = "FQDN URL of the AutoGen container app."
-}
-
-# Shared Storage Info
+# --- Shared Storage Info ---
 output "shared_storage_account_name" {
-  value       = module.shared.storage_account_name
-  description = "Shared Azure Files storage account name."
+  description = "The name of the shared NFS storage account."
+  value       = module.shared_nfs.storage_account_name
 }
 
-output "shared_file_share_name" {
-  value       = module.shared.file_share_name
-  description = "Shared file share name."
+output "shared_storage_primary_access_key" {
+  description = "Primary access key for the shared storage account."
+  value       = module.shared_nfs.primary_access_key
+  sensitive   = true
 }
+
+# --- Service Endpoints (Temporarily Disabled) ---
+/*
+output "autogen_service_url" {
+  description = "The public FQDN (URL) of the AutoGen service."
+  value       = module.autogen_aca.app_url
+}
+
+output "langgraph_service_url" {
+  description = "The public FQDN (URL) of the LangGraph orchestration service."
+  value       = module.langgraph_aca.app_url
+}
+*/
